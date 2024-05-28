@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI game generator</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #1E1E1E;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            max-width: 500px;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #BB86FC;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #E0E0E0;
+        }
+        input, select, button {
+            width: 90%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background: #333;
+            color: #E0E0E0;
+        }
+        button {
+            background-color: #BB86FC;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #9B67E2;
+        }
+        #results {
+            margin-top: 20px;
+            text-align: left;
+            color: #E0E0E0; /* Adjust text color */
+        }
+        .download-btn {
+            display: none;
+            margin-top: 10px;
+            background-color: #03DAC6;
+        }
+        .download-btn:hover {
+            background-color: #02B3A4;
+        }
+        .loading {
+            color: #888;
+            font-style: italic;
+        }
+        /* Dropdown styling */
+        select {
+            width: 97%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background: #333;
+            color: #E0E0E0;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23E0E0E0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        /* Remove default arrow for IE */
+        select::-ms-expand {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Game Generator</h1>
+        <form id="gameForm">
+            <div class="form-group">
+                <label for="gameType">Game Type:</label>
+                <input type="text" id="chipType" name="gameType" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">Game Name:</label>
+                <input type="text" id="parameters" name="amount" required>
+            </div>
+            <div class="form-group">
+                <label for="is3D">3D?:</label>
+                <select id="is3D" name="is3D" required>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            
+            <button type="button" onclick="generateGame()">Generate</button>
+        </form>
+        <div id="results"></div>
+        <button id="downloadBtn" class="download-btn" onclick="downloadResults()">Download Results</button>
+    </div>
+    <script>
+        function generateGame() {
+            const gameType = document.getElementById('chipType').value;
+            const amount = document.getElementById('parameters').value;
+            const is3D = document.getElementById('is3D').value;
+            const resultsDiv = document.getElementById('results');
+            const downloadBtn = document.getElementById('downloadBtn');
+    
+            // Show loading message
+            resultsDiv.innerHTML = '<p class="loading">Generating...</p>';
+            downloadBtn.style.display = 'none';
+    
+            // Simulate a delay of 2-6 seconds
+            const delay = Math.floor(Math.random() * (6000 - 2000 + 1)) + 2000;
+            setTimeout(() => {
+                // Display the generated game details
+                resultsDiv.innerHTML = `
+                    <p>Game Type: ${gameType}</p>
+                    <p>Game Name: ${amount}</p>
+                    <p>3D: ${is3D}</p>
+                `;
+                downloadBtn.style.display = 'block';
+            }, delay);
+        }
+    
+        function downloadResults() {
+            const gameType = document.getElementById('chipType').value;
+            const amount = document.getElementById('parameters').value;
+            const is3D = document.getElementById('is3D').value;
+            const result = `
+                Game Type: ${gameType}
+                Game Name: ${amount}
+                3D: ${is3D}
+            `;
+            const blob = new Blob([result], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'game_generation_results.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+    
